@@ -3,27 +3,9 @@ import os
 import asyncio
 from openai import AsyncOpenAI
 from tqdm import tqdm
-import random
-import json
 
-
-class AlreadyProcessedException(Exception):
-    """Exception raised when data has already been processed."""
-
-    def __init__(self, message="Data has already been processed"):
-        self.message = message
-        super().__init__(self.message)
-
-
-class InvalidOutputTypeError(Exception):
-    """Exception raised when output text is not a string."""
-
-    def __init__(self, output):
-        self.output = output
-        self.message = (
-            f"Expected string type for output, got {type(output).__name__} instead."
-        )
-        super().__init__(self.message)
+from .exceptions import AlreadyProcessedException, InvalidOutputTypeError
+from .types import DataListType
 
 
 class Autopilot:
@@ -44,10 +26,6 @@ class Autopilot:
         self._tmp_dir = tmp_dir
         self._tmp_file_prefix = tmp_file_prefix
         self._verbose = verbose
-
-    # check queue format
-    def validate(self):
-        pass
 
     async def _worker(self, worker_id: int):
         while not self._data_queue.empty():
@@ -111,7 +89,7 @@ class Autopilot:
         # run until worker fetched all data in the queue
         await asyncio.gather(*tasks)
 
-    def _post_process(self, data_list):
+    def _post_process(self, data_list: DataListType):
         for i, data in enumerate(data_list):
             data_id = data["id"]
 
@@ -134,7 +112,7 @@ class Autopilot:
 
         return data_list
 
-    def run(self, data_list: list[dict[str, int | list[dict[str, str]]]]):
+    def run(self, data_list: DataListType):
         # add data to queue
         for data in data_list:
             data_id, messages = data["id"], data["messages"]
@@ -145,25 +123,5 @@ class Autopilot:
 
         # map response text input original data list
         data_list = self._post_process(data_list)
+
         return data_list
-
-
-if __name__ == "__main__":
-
-    async def mock_fn(worker_id, client, idx, messages):
-        await asyncio.sleep(random.randint(1, 20) / 10)
-
-        return f"test {idx}"
-
-    autopilot = Autopilot(process_fn=mock_fn, verbose=True)
-
-    # data_list -> data[]
-    # data -> dict[id, message, response]
-
-    data_list = autopilot.run(
-        [
-            {"id": i, "messages": [{"role": "system", "content": "system prompt"}]}
-            for i in range(30)
-        ]
-    )
-    print(json.dumps(data_list, indent=2))
