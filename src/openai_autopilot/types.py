@@ -1,15 +1,18 @@
 from typing import TypedDict, List, Optional
 
 
-class Message(TypedDict):
+class AutopilotMessage(TypedDict):
     role: str
     content: str
 
 
-class DataItem(TypedDict, total=False):  # total=False makes all keys optional
+AutopilotMessageType = List[AutopilotMessage]
+
+
+class AutopilotData(TypedDict):
     id: int
-    messages: List[Message]
-    response: Optional[str]  # response is optional and can be a string
+    messages: AutopilotMessageType
+    response: Optional[str]
 
 
-DataListType = List[DataItem]
+AutopilotDataListType = List[AutopilotData]

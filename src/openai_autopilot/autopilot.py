@@ -1,18 +1,20 @@
-from typing import Coroutine
+from typing import Callable, Coroutine, Any
 import os
 import asyncio
 from openai import AsyncOpenAI
 from tqdm import tqdm
 
 from .exceptions import AlreadyProcessedException, InvalidOutputTypeError
-from .types import DataListType
+from .types import AutopilotDataListType, AutopilotMessageType
 
 
 class Autopilot:
     def __init__(
         self,
         client: AsyncOpenAI = None,
-        process_fn: Coroutine = None,
+        process_fn: Callable[
+            [int, AsyncOpenAI, int, AutopilotMessageType], Coroutine[Any, Any, str]
+        ] = None,
         concurrency: int = 5,
         tmp_dir: str = "tmp",
         tmp_file_prefix: str = "data",
@@ -89,7 +91,7 @@ class Autopilot:
         # run until worker fetched all data in the queue
         await asyncio.gather(*tasks)
 
-    def _post_process(self, data_list: DataListType):
+    def _post_process(self, data_list: AutopilotDataListType):
         for i, data in enumerate(data_list):
             data_id = data["id"]
 
@@ -112,7 +114,7 @@ class Autopilot:
 
         return data_list
 
-    def run(self, data_list: DataListType):
+    def run(self, data_list: AutopilotDataListType):
         # add data to queue
         for data in data_list:
             data_id, messages = data["id"], data["messages"]
