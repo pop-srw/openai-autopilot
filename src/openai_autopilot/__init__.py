@@ -1,2 +1,2 @@
-from .types import AutopilotMessageType, AutopilotDataListType
+from .types import AutopilotMessage, AutopilotData, AutopilotDataList
 from .autopilot import Autopilot

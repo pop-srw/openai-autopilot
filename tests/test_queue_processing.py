@@ -1,7 +1,7 @@
 import pytest
 
 from openai_autopilot.autopilot import Autopilot
-from openai_autopilot.types import AutopilotMessageType
+from openai_autopilot.types import AutopilotDataList
 
 
 def test_queue_processing(mocker):
@@ -20,10 +20,12 @@ def test_queue_processing(mocker):
     )
 
     autopilot.run(
-        [
-            {"id": i, "messages": [{"role": "system", "content": "system prompt"}]}
-            for i in range(3)
-        ]
+        AutopilotDataList(
+            data_list=[
+                {"id": i, "messages": [{"role": "system", "content": "system prompt"}]}
+                for i in range(3)
+            ]
+        )
     )
 
     assert autopilot._data_queue.qsize() == 3
@@ -36,10 +38,12 @@ def test_queue_processing(mocker):
     )
 
     autopilot.run(
-        [
-            {"id": i, "messages": [{"role": "system", "content": "system prompt"}]}
-            for i in range(30)
-        ]
+        AutopilotDataList(
+            data_list=[
+                {"id": i, "messages": [{"role": "system", "content": "system prompt"}]}
+                for i in range(30)
+            ]
+        )
     )
 
     assert autopilot._data_queue.qsize() == 30
@@ -52,10 +56,12 @@ def test_queue_processing(mocker):
     )
 
     autopilot.run(
-        [
-            {"id": i, "messages": [{"role": "system", "content": "system prompt"}]}
-            for i in range(0)
-        ]
+        AutopilotDataList(
+            data_list=[
+                {"id": i, "messages": [{"role": "system", "content": "system prompt"}]}
+                for i in range(0)
+            ]
+        )
     )
 
     assert autopilot._data_queue.qsize() == 0

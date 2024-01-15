@@ -1,7 +1,8 @@
+from pydantic import ValidationError
 import pytest
 
 from openai_autopilot.autopilot import Autopilot
-from openai_autopilot.types import AutopilotMessageType
+from openai_autopilot.types import AutopilotDataList
 
 
 def test_valid_format_not_return_error(mocker):
@@ -21,15 +22,18 @@ def test_valid_format_not_return_error(mocker):
 
     try:
         autopilot.run(
-            [
-                {
-                    "id": 0,
-                    "messages": [{"role": "system", "content": "system prompt"}],
-                }
-            ]
+            AutopilotDataList(
+                data_list=[
+                    {
+                        "id": 0,
+                        "messages": [{"role": "system", "content": "system prompt"}],
+                    }
+                ]
+            )
         )
-    except Exception:
+    except Exception as e:
         pytest.fail("unexpected error")
+        print(e)
 
 
 def test_invalid_id_key_return_error(mocker):
@@ -47,14 +51,16 @@ def test_invalid_id_key_return_error(mocker):
         concurrency=1,
     )
 
-    with pytest.raises(KeyError):
+    with pytest.raises(ValidationError):
         autopilot.run(
-            [
-                {
-                    "id_xxx": 0,
-                    "messages": [{"role": "system", "content": "system prompt"}],
-                }
-            ]
+            AutopilotDataList(
+                data_list=[
+                    {
+                        "id_xxx": 0,
+                        "messages": [{"role": "system", "content": "system prompt"}],
+                    }
+                ]
+            )
         )
 
 
@@ -73,14 +79,18 @@ def test_invalid_messages_key_return_error(mocker):
         concurrency=1,
     )
 
-    with pytest.raises(KeyError):
+    with pytest.raises(ValidationError):
         autopilot.run(
-            [
-                {
-                    "id": 0,
-                    "messages_xxx": [{"role": "system", "content": "system prompt"}],
-                }
-            ]
+            AutopilotDataList(
+                data_list=[
+                    {
+                        "id": 0,
+                        "messages_xxx": [
+                            {"role": "system", "content": "system prompt"}
+                        ],
+                    }
+                ]
+            )
         )
 
 
@@ -99,14 +109,18 @@ def test_invalid_message_role_key_return_error(mocker):
         concurrency=1,
     )
 
-    with pytest.raises(KeyError):
+    with pytest.raises(ValidationError):
         autopilot.run(
-            [
-                {
-                    "id": 0,
-                    "messages": [{"role_xxx": "system", "content": "system prompt"}],
-                }
-            ]
+            AutopilotDataList(
+                data_list=[
+                    {
+                        "id": 0,
+                        "messages": [
+                            {"role_xxx": "system", "content": "system prompt"}
+                        ],
+                    },
+                ]
+            )
         )
 
 
@@ -125,12 +139,16 @@ def test_invalid_message_content_key_return_error(mocker):
         concurrency=1,
     )
 
-    with pytest.raises(KeyError):
+    with pytest.raises(ValidationError):
         autopilot.run(
-            [
-                {
-                    "id": 0,
-                    "messages": [{"role": "system", "content_xxx": "system prompt"}],
-                }
-            ]
+            AutopilotDataList(
+                data_list=[
+                    {
+                        "id": 0,
+                        "messages": [
+                            {"role": "system", "content_xxx": "system prompt"}
+                        ],
+                    }
+                ]
+            )
         )

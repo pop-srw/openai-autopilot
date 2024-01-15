@@ -1,11 +1,11 @@
-from typing import Callable, Coroutine, Any
+from typing import Callable, Coroutine, Any, List
 import os
 import asyncio
 from openai import AsyncOpenAI
 from tqdm import tqdm
 
 from .exceptions import AlreadyProcessedException, InvalidOutputTypeError
-from .types import AutopilotDataListType, AutopilotMessageType
+from .types import AutopilotMessage, AutopilotDataList
 
 
 class Autopilot:
@@ -13,7 +13,7 @@ class Autopilot:
         self,
         client: AsyncOpenAI = None,
         process_fn: Callable[
-            [int, AsyncOpenAI, int, AutopilotMessageType], Coroutine[Any, Any, str]
+            [int, AsyncOpenAI, int, List[AutopilotMessage]], Coroutine[Any, Any, str]
         ] = None,
         concurrency: int = 5,
         tmp_dir: str = "tmp",
@@ -91,9 +91,9 @@ class Autopilot:
         # run until worker fetched all data in the queue
         await asyncio.gather(*tasks)
 
-    def _post_process(self, data_list: AutopilotDataListType):
-        for i, data in enumerate(data_list):
-            data_id = data["id"]
+    def _post_process(self, autopilot_data_list: AutopilotDataList):
+        for i, data in enumerate(autopilot_data_list.data_list):
+            data_id = data.id
 
             try:
                 tmp_file = os.path.join(
@@ -102,28 +102,27 @@ class Autopilot:
 
                 # file response with empty string if tmp file does not exist
                 if not os.path.isfile(tmp_file):
-                    data_list[i]["response"] = ""
+                    autopilot_data_list.data_list[i].response = ""
                     continue
 
                 # read response back from tmp file
                 with open(tmp_file, "r", encoding="utf8") as f:
-                    data_list[i]["response"] = f.read()
+                    autopilot_data_list.data_list[i].response = f.read()
 
             except Exception as e:
                 print(e)
 
-        return data_list
+        return autopilot_data_list
 
-    def run(self, data_list: AutopilotDataListType):
+    def run(self, autopilot_data_list: AutopilotDataList):
         # add data to queue
-        for data in data_list:
-            data_id, messages = data["id"], data["messages"]
-            self._data_queue.put_nowait((data_id, messages))
+        for data in autopilot_data_list.data_list:
+            self._data_queue.put_nowait((data.id, data.messages))
 
         # run process function parallelly
         asyncio.run(self._run())
 
         # map response text input original data list
-        data_list = self._post_process(data_list)
+        autopilot_data_list = self._post_process(autopilot_data_list)
 
-        return data_list
+        return autopilot_data_list

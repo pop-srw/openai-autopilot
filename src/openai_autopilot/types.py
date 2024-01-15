@@ -1,18 +1,17 @@
-from typing import TypedDict, List, Optional
+from typing import List, Optional
+from pydantic import BaseModel
 
 
-class AutopilotMessage(TypedDict):
+class AutopilotMessage(BaseModel):
     role: str
     content: str
 
 
-AutopilotMessageType = List[AutopilotMessage]
-
-
-class AutopilotData(TypedDict):
+class AutopilotData(BaseModel):
     id: int
-    messages: AutopilotMessageType
-    response: Optional[str]
+    messages: List[AutopilotMessage]
+    response: Optional[str] = None
 
 
-AutopilotDataListType = List[AutopilotData]
+class AutopilotDataList(BaseModel):
+    data_list: List[AutopilotData]
