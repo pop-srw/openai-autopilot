@@ -7,13 +7,14 @@ from openai_autopilot import Autopilot, AutopilotMessageType
 
 
 async def process(
-    worker_id: int, client: AsyncOpenAI, idx: int, messages: AutopilotMessageType
+    worker_id: int, client: AsyncOpenAI, data_id: int, messages: AutopilotMessageType
 ) -> Coroutine[None, None, str]:
     await asyncio.sleep(random.randint(1, 20) / 10)
-    return f"test {idx}"
+
+    return f"process {data_id} by worker {worker_id}"
 
 
-autopilot = Autopilot(process_fn=process, verbose=True)
+autopilot = Autopilot(client=None, process_fn=process, verbose=True)
 
 data_list = autopilot.run(
     [
@@ -21,4 +22,6 @@ data_list = autopilot.run(
         for i in range(30)
     ]
 )
+
+print("output")
 print(json.dumps(data_list, indent=2))
