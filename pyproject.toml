@@ -24,7 +24,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["asyncio", "openai", "tqdm"]
+dependencies = ["asyncio", "openai", "tqdm", "pydantic"]
 
 [project.urls]
 Documentation = "https://github.com/unknown/openai-autopilot#readme"
