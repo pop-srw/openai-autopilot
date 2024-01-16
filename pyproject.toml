@@ -11,7 +11,7 @@ requires-python = ">=3.8"
 license = "MIT"
 keywords = []
 authors = [
-  { name = "U.N. Owen", email = "void@some.where" },
+  { name = "srw", email = "khemmachotikun.s@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -79,3 +79,11 @@ exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
 ]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/docs",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
