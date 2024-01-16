@@ -1,7 +1,6 @@
 from typing import Coroutine, List
 import asyncio
 import random
-import json
 from openai import AsyncOpenAI
 from openai_autopilot import Autopilot, AutopilotMessage, AutopilotDataList
 

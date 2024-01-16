@@ -91,7 +91,9 @@ class Autopilot:
         # run until worker fetched all data in the queue
         await asyncio.gather(*tasks)
 
-    def _post_process(self, autopilot_data_list: AutopilotDataList):
+    def _post_process(
+        self, autopilot_data_list: AutopilotDataList
+    ) -> AutopilotDataList:
         for i, data in enumerate(autopilot_data_list.data_list):
             data_id = data.id
 
@@ -114,7 +116,7 @@ class Autopilot:
 
         return autopilot_data_list
 
-    def run(self, autopilot_data_list: AutopilotDataList):
+    def run(self, autopilot_data_list: AutopilotDataList) -> AutopilotDataList:
         # add data to queue
         for data in autopilot_data_list.data_list:
             self._data_queue.put_nowait((data.id, data.messages))
