@@ -16,6 +16,7 @@ Autopilot simplifies your OpenAI interactions by concurrently processing multipl
 - [How it works](#how-it-works)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Configuration Options](#configuration-options)
 - [Example](#example)
 - [License](#license)
 
