@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="docs/logo.png" alt="Autopilot logo" width="150" />
+    <img src="https://raw.githubusercontent.com/pop-srw/openai-autopilot/main/docs/logo.png" alt="Autopilot logo" width="150" />
     <h1 align="center">OpenAI Autopilot</h1>
 </p>
 
@@ -34,7 +34,7 @@ The Autopilot framework streamlines asynchronous data processing with OpenAI's A
 
 ## Installation
 
-```console
+```shell
 pip install openai-autopilot
 ```
 
