@@ -1,9 +1,16 @@
 from typing import List, Optional
+from enum import Enum
 from pydantic import BaseModel
 
 
+class AutopilotRoleEnum(str, Enum):
+    system = "system"
+    user = "user"
+    assistant = "assistant"
+
+
 class AutopilotMessage(BaseModel):
-    role: str
+    role: AutopilotRoleEnum
     content: str
 
 
