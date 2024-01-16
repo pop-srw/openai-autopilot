@@ -5,13 +5,13 @@ build-backend = "hatchling.build"
 [project]
 name = "openai-autopilot"
 dynamic = ["version"]
-description = ''
+description = "Autopilot enhances OpenAI interactions with concurrent task processing, faster data handling, reliable progress tracking, and transparency."
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
-keywords = []
+keywords = ["openai", "autopilot", "chatgpt", "gpt3.5", "gpt4"]
 authors = [
-  { name = "srw", email = "khemmachotikun.s@gmail.com" },
+  { name = "pop-srw", email = "khemmachotikun.s@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -27,9 +27,9 @@ classifiers = [
 dependencies = ["asyncio", "openai", "tqdm", "pydantic"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/openai-autopilot#readme"
-Issues = "https://github.com/unknown/openai-autopilot/issues"
-Source = "https://github.com/unknown/openai-autopilot"
+Documentation = "https://github.com/pop-srw/openai-autopilot#readme"
+Issues = "https://github.com/pop-srw/openai-autopilot/issues"
+Source = "https://github.com/pop-srw/openai-autopilot"
 
 [tool.hatch.version]
 path = "src/openai_autopilot/__about__.py"
